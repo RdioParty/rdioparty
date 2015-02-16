@@ -13,7 +13,11 @@ client.on("error", function (err) {
 /* GET home page. */
 router.get('/rooms', function (req, res) {
   client.keys('rooms:*', function (err, results) {
-    res.json(results);
+    var data = results.map(function(item){
+      //TODO get the name and the count of people in the room.
+      return {slug: item.substring(6)};
+    });
+    res.json(data);
   });
 });
 
