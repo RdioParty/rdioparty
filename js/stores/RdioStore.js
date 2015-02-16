@@ -5,6 +5,8 @@ var assign = require('object-assign');
 var ActionTypes = Constants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
+var _currentUser;
+
 var RdioStore = assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -19,14 +21,20 @@ var RdioStore = assign({}, EventEmitter.prototype, {
   
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
+  },
+
+  currentUser: function() {
+    return _currentUser;
   }
 });
 
 RdioStore.dispatchToken = AppDispatcher.register(function(payload) {
   var action = payload.action;
   switch(action.type) {
-    default:
-    console.log('test');
+    case ActionTypes.LOGIN_USER:
+      _currentUser = action.user;
+      RdioStore.emitChange();
+      break;
   }
 });
 

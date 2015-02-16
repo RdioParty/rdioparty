@@ -1,11 +1,11 @@
 var React = require('react');
-var RdioStore = require('../stores/RdioStore');
+var Content = require('./Content.jsx');
 
 var App = React.createClass({
   render: function() {
     return (
       <div>
-        Rdio Party
+        <Content />
       </div>
     );
   }
