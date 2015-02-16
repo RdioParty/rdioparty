@@ -3,9 +3,9 @@ Rdio Party
 
 ##Setup
 ```
-npm install
+gem install compass
 npm install -g gulp
 npm install -g nodemon
-gem install compass
+npm install
 nodemon bin/www
 gulp
