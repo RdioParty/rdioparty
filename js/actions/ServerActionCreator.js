@@ -9,5 +9,12 @@ module.exports = {
       type: ActionTypes.LOGIN_USER,
       user: user
     });
+  },
+
+  createRoom: function(name) {
+    AppDispatcher.handleViewAction({
+      type: ActionTypes.CREATE_ROOM,
+      name: name
+    });
   }
 }

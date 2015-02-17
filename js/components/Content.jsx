@@ -1,6 +1,7 @@
-var React = require('react');
+var React = require('react/addons');
 var RdioStore = require('../stores/RdioStore');
 var ServerActionCreator = require('../actions/ServerActionCreator');
+var API = require('../utils/web-api');
 
 function getStateFromStores() {
   return {
@@ -9,6 +10,8 @@ function getStateFromStores() {
 }
 
 var Content = React.createClass({
+  mixins: [React.addons.LinkedStateMixin],
+
   getInitialState: function() {
     return getStateFromStores();
   },
@@ -28,7 +31,18 @@ var Content = React.createClass({
           type='button'
           value='login'
           onClick={this._clickLogin}
-          disabled={!!this.state.currentUser}
+          hidden={!!this.state.currentUser}
+        />
+        <input
+          type='text'
+          valueLink={this.linkState('roomName')}
+          hidden={!!!this.state.currentUser}
+        />
+        <input
+          type='button'
+          value='create room'
+          onClick={this._clickCreateRoom}
+          hidden={!!!this.state.currentUser}
         />
       </div>
     );
@@ -44,6 +58,10 @@ var Content = React.createClass({
         ServerActionCreator.loginUser(R.currentUser.attributes);
       }
     });
+  },
+
+  _clickCreateRoom: function() {
+    API.createRoom(this.state.roomName);
   }
 });
 
