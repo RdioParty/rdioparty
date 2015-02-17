@@ -18,7 +18,7 @@ module.exports = function (server) {
     client.get(socket.id, function (err, userId) {
       socket.join(room, function(){
         console.log(socket.rooms, room);
-        io.to(socket.rooms[1]).emit('joined', {userId: userId});
+        socket.broadcast.to(socket.rooms[1]).emit('joined', {userId: userId});
       });
     });
   };
@@ -27,7 +27,7 @@ module.exports = function (server) {
     //TODO check if room still has people in
     //TODO persist room in redis. Check http://redis.io/commands#set SREM
     client.get(socket.id, function (err, userId) {
-      io.to(socket.rooms[1]).emit('left', {userId: userId});
+      socket.broadcast.to(socket.rooms[1]).emit('left', {userId: userId});
       socket.leave(room);
     });
   };
@@ -36,14 +36,14 @@ module.exports = function (server) {
     //TODO
     //check http://redis.io/commands#sorted_set ZINCRBY
     var queue = [];
-    io.to(socket.rooms[1]).emit('queue:update', queue);
+    socket.broadcast.to(socket.rooms[1]).emit('queue:update', queue);
   };
 
   var voteDown = function (socket, trackId) {
     //TODO
     //check http://redis.io/commands#sorted_set ZINCRBY
     var queue = [];
-    io.to(socket.rooms[1]).emit('queue:update', queue);
+    socket.broadcast.to(socket.rooms[1]).emit('queue:update', queue);
   };
 
   var skipCurrentTrack = function (socket, trackId) {
@@ -60,7 +60,7 @@ module.exports = function (server) {
     //TODO sort history for a while ?? like 2 hours ? see http://redis.io/commands/expire
     //TODO tag using a timestamp for ordering
     //TODO add user id on the message
-    io.to(socket.rooms[1]).emit('chat:received', message);
+    socket.broadcast.to(socket.rooms[1]).emit('chat:received', message);
   };
 
   io.on('connection', function (socket) {
