@@ -16,7 +16,7 @@ module.exports = {
         }
       })
       .fail(function(xhr, status) {
-        alert(xhr.responseText);
+        ServerActionCreator.createRoom(name);
       });
   }
 }
