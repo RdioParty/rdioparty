@@ -16,8 +16,10 @@ module.exports = function (server) {
     //TODO persist room in redis. Check http://redis.io/commands#set SADD
 
     client.get(socket.id, function (err, userId) {
-      socket.join(room);
-      socket.broadcast.emit('joined', {userId: userId});
+      socket.join(room, function(){
+        console.log(socket.rooms, room);
+        io.to(socket.rooms[1]).emit('joined', {userId: userId});
+      });
     });
   };
 
@@ -25,7 +27,7 @@ module.exports = function (server) {
     //TODO check if room still has people in
     //TODO persist room in redis. Check http://redis.io/commands#set SREM
     client.get(socket.id, function (err, userId) {
-      socket.broadcast.emit('left', {userId: userId});
+      io.to(socket.rooms[1]).emit('left', {userId: userId});
       socket.leave(room);
     });
   };
@@ -34,14 +36,14 @@ module.exports = function (server) {
     //TODO
     //check http://redis.io/commands#sorted_set ZINCRBY
     var queue = [];
-    socket.broadcast.emit('queue:update', queue);
+    io.to(socket.rooms[1]).emit('queue:update', queue);
   };
 
   var voteDown = function (socket, trackId) {
     //TODO
     //check http://redis.io/commands#sorted_set ZINCRBY
     var queue = [];
-    socket.broadcast.emit('queue:update', queue);
+    io.to(socket.rooms[1]).emit('queue:update', queue);
   };
 
   var skipCurrentTrack = function (socket, trackId) {
@@ -58,14 +60,14 @@ module.exports = function (server) {
     //TODO sort history for a while ?? like 2 hours ? see http://redis.io/commands/expire
     //TODO tag using a timestamp for ordering
     //TODO add user id on the message
-    socket.broadcast.emit('chat:received', message);
+    io.to(socket.rooms[1]).emit('chat:received', message);
   };
 
   io.on('connection', function (socket) {
     socket.on('disconnect', function () {
-      client.get(socket.id, function (err, userId) {
-        socket.broadcast.emit('left', {userId: userId});
-      });
+      if(socket.rooms.length > 0){
+        leave(socket, socket[0])
+      }
     });
 
     socket.on('error', function (err) {
@@ -77,6 +79,7 @@ module.exports = function (server) {
     });
 
     socket.on('join', function (room) {
+      console.log('join', arguments);
       join(socket, room);
     });
 
