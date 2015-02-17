@@ -32,7 +32,7 @@ router.post('/rooms', function (req, res) {
     }
     else {
       client.hset(key, 'name', name, function (err, results) {
-        res.json({status: 'ok'});
+        res.json({status: 'ok', data: {slug: key}});
       });
     }
   });
