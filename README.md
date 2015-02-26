@@ -3,7 +3,7 @@ Rdio Party
 
 ##AWS ElastiCache Redis Endpoints:
 
-  Primary
+  Primary:
     rp.xylvvf.ng.0001.usw2.cache.amazonaws.com:6379
 
   Read endpoints:
